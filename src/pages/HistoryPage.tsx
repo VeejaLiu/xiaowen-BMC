@@ -86,7 +86,7 @@ function HistoryPage() {
                     <p><b>Style:</b> {styleMap[item.style]} </p>
                     <p><b>Prompt:</b> {item.prompt} </p>
                     <p><b>Prompt English:</b> {item.promptEnglish} </p>
-                    <p><b>Generate Used Time:</b> {item.generateUsedTime} </p>
+                    <p><b>Generate Used Time:</b> {item.generateUsedTime / 1000}s </p>
                     <p><b>Status:</b> {statusMap[item.status]} </p>
                     <p><b>Create Time:</b> {item.createTime} </p>
                 </List.Item>
