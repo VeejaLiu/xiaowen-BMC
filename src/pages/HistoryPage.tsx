@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {HistoryApi} from "../service/HistoryApi.ts";
-import {List} from "antd";
+import {List, Image} from "antd";
 
 
 export const styleMap: string[] = [
@@ -72,13 +72,18 @@ function HistoryPage() {
                     actions={[]}
                     extra={
                         <>
-                            {
-                                item?.images?.map((image: string) => {
-                                    return (
-                                        <img src={image} alt="image" style={{width: 200, margin: '5px'}}/>
-                                    );
-                                })
-                            }
+                            <Image.PreviewGroup>
+                                {
+                                    item?.images?.map((image: string) => {
+                                        return (
+                                            <Image
+                                                width={200}
+                                                src={image}
+                                            />
+                                        );
+                                    })
+                                }
+                            </Image.PreviewGroup>
                         </>
                     }
                 >
