@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {
     Button,
     Form,
-    Input,
+    Input, message,
     Radio,
 } from 'antd';
 import {DrawApi} from "../service/DrawApi.ts";
@@ -24,9 +24,40 @@ export const styleMap: string[] = [
     "Trash polka",
 ];
 
+const randomEmptyPromptMsg = [
+    '写点什么吧',
+    '写字啊',
+    '写点字啊',
+    '没字你点nm',
+    '不写我给你造?',
+    '你搁这点nm呢'
+]
+
+const randomPrompt = [
+    '一只可爱的小猫',
+    '一个宇航员漫步在太空站内',
+    '大海上的日出景色',
+    '一杯热蓝莓酒',
+    '城市的霓虹灯光',
+    '高山上的松树林',
+    '一对恋人手牵手漫步在沙滩上',
+    '古老城堡的庭院',
+    '美丽的夕阳照耀在湖泊上',
+    '一个快乐的生日派对',
+    '静谧的森林小径',
+]
+
+
 const GeneratePage: React.FC = () => {
-    const [style, setStyle] = useState<string>('1');
-    const [prompt, setPrompt] = useState<string>('');
+    // 从styleMap随机选一个
+    const [style, setStyle] = useState<string>(Math.floor(Math.random() * styleMap.length).toString());
+    const [prompt, setPrompt] = useState<string>(randomPrompt[Math.floor(Math.random() * randomPrompt.length)]);
+
+    const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
+    const [buttonLoading, setButtonLoading] = useState<boolean>(false);
+
+    const [messageApi, contextHolder] = message.useMessage();
+
 
     const handleStyleChange = (e: any) => {
         setStyle(e.target.value);
@@ -37,11 +68,24 @@ const GeneratePage: React.FC = () => {
     }
 
     const handleGenerateClick = async () => {
+        if (prompt === '') {
+            messageApi.error(randomEmptyPromptMsg[Math.floor(Math.random() * randomEmptyPromptMsg.length)]);
+            return;
+        }
+        setButtonDisabled(true);
+        setButtonLoading(true);
         const result = await DrawApi.draw({style: Number(style), prompt: prompt});
-        console.log(`DrawApi.draw result: ${JSON.stringify(result)}`);
+        // set timeout 3 seconds
+        setTimeout(() => {
+            console.log(`DrawApi.draw result: ${JSON.stringify(result)}`);
+            messageApi.success('后台正在努力生成中，本次ID为' + result.generateHistoryId);
+            setButtonDisabled(false);
+            setButtonLoading(false);
+        }, 1000);
     }
     return (
         <>
+            {contextHolder}
             <Form
                 labelCol={{span: 4}}
                 wrapperCol={{span: 14}}
@@ -60,7 +104,13 @@ const GeneratePage: React.FC = () => {
                     <TextArea rows={4} value={prompt} onChange={handlePromptChange}/>
                 </Form.Item>
                 {/*<Form.Item label="Button">*/}
-                <Button onClick={handleGenerateClick}>生成</Button>
+                <Button
+                    onClick={handleGenerateClick}
+                    disabled={buttonDisabled}
+                    loading={buttonLoading}
+                >
+                    生成
+                </Button>
                 {/*</Form.Item>*/}
             </Form>
         </>
