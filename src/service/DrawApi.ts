@@ -1,7 +1,5 @@
 import axios from "axios";
-
-const backendUrl = "http://127.0.0.1:10100";
-
+import {backendUrl} from "./config.ts";
 
 /**
  * Draw API
