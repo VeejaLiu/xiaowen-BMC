@@ -1,6 +1,7 @@
 import axios from "axios";
+import {backendUrl} from "./config.ts";
 
-const backendUrl = "http://127.0.0.1:10100";
+
 
 
 /**
