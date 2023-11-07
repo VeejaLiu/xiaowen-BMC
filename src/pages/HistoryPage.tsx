@@ -1,12 +1,33 @@
 import {useEffect, useState} from "react";
 import {HistoryApi} from "../service/HistoryApi.ts";
-import {Card} from "antd";
+import {List} from "antd";
+
+
+export const styleMap: string[] = [
+    "None",
+    "Black work",
+    "Dot work",
+    "Geometric",
+    "Watercolor",
+    "Realism",
+    "Neo traditional",
+    "New school",
+    "Japanese",
+    "Tribal",
+    "Lettering",
+    "Trash polka",
+];
 
 function HistoryPage() {
     const [history, setHistory] = useState<any[]>([]);
 
     const getHistory = async () => {
         const result = await HistoryApi.getHistory();
+        console.log(result);
+        result.history.forEach((item: any) => {
+                item.images = JSON.parse(item.images);
+            }
+        );
         console.log(result);
         setHistory(result.history);
     }
@@ -17,24 +38,40 @@ function HistoryPage() {
     }, []);
 
     return (
-        <div style={{flex: 1}}>
-            {
-                history.map((item) => {
-                    return (
-                        <Card title={item.id} bordered={false} style={{width: 300, margin: '5px'}}>
-                            {/*{"id":7,"user_id":"admin","style":1,"prompt_history_id":7,"status":0,"generate_used_time":0,"images":"","is_private":0,"is_starred":0,"is_deleted":0,"create_time":"2023-11-06T15:28:18.000Z","update_time":"2023-11-06T15:28:18.000Z"}*/}
-                            <p>style: {item.style}</p>
-                            <p>generate_used_time: {item.generate_used_time}</p>
-                            <p>images: {item.images}</p>
-                            <p>create_time: {item.create_time}</p>
-                        </Card>
-
-
-                    );
-                })
+        <List
+            itemLayout="vertical"
+            size="large"
+            pagination={{
+                onChange: (page) => {
+                    console.log(page);
+                },
+                pageSize: 2,
+            }}
+            dataSource={history}
+            renderItem={(item) => (
+                <List.Item
+                    key={item.id}
+                    actions={[]}
+                    extra={
+                        <>
+                            {
+                                item?.images?.map((image: string) => {
+                                    return (
+                                        <img src={image} alt="image" style={{width: 200, margin: '5px'}}/>
+                                    );
+                                })
+                            }
+                        </>
+                    }
+                >
+                    {`item.prompt_history_id: ${item.prompt_history_id}`}
+                </List.Item>
+            )
             }
-        </div>
-    );
+        />
+    )
+        ;
 }
+
 
 export default HistoryPage;

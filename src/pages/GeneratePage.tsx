@@ -9,6 +9,20 @@ import {DrawApi} from "../service/DrawApi.ts";
 
 const {TextArea} = Input;
 
+export const styleMap: string[] = [
+    "None",
+    "Black work",
+    "Dot work",
+    "Geometric",
+    "Watercolor",
+    "Realism",
+    "Neo traditional",
+    "New school",
+    "Japanese",
+    "Tribal",
+    "Lettering",
+    "Trash polka",
+];
 
 const GeneratePage: React.FC = () => {
     const [style, setStyle] = useState<string>('1');
@@ -36,17 +50,10 @@ const GeneratePage: React.FC = () => {
             >
                 <Form.Item label="Style">
                     <Radio.Group onChange={handleStyleChange} value={style}>
-                        <Radio value="1"> Black work </Radio>
-                        <Radio value="2"> Dot work </Radio>
-                        <Radio value="3"> Geometric </Radio>
-                        <Radio value="4"> Watercolor </Radio>
-                        <Radio value="5"> Realism </Radio>
-                        <Radio value="6"> Neo traditional </Radio>
-                        <Radio value="7"> New school </Radio>
-                        <Radio value="8"> Japanese </Radio>
-                        <Radio value="9"> Tribal </Radio>
-                        <Radio value="10"> Lettering </Radio>
-                        <Radio value="11"> Trash polka </Radio>
+                        {styleMap.map((item, index) => {
+                                return <Radio.Button key={index} value={index.toString()}>{item}</Radio.Button>
+                            }
+                        )}
                     </Radio.Group>
                 </Form.Item>
                 <Form.Item label="Prompt">
