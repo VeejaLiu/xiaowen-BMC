@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {HistoryApi} from "../service/HistoryApi.ts";
 import {List, Image} from "antd";
+import "./HistoryPage.css";
 
 
 export const styleMap: string[] = [
@@ -87,19 +88,48 @@ function HistoryPage() {
                         </>
                     }
                 >
-                    <p><b>ID:</b> {item.id} </p>
-                    <p><b>Style:</b> {styleMap[item.style]} </p>
-                    <p><b>Prompt:</b> {item.prompt} </p>
-                    <p><b>Prompt English:</b> {item.promptEnglish} </p>
-                    <p><b>Generate Used Time:</b> {item.generateUsedTime / 1000}s </p>
-                    <p><b>Status:</b> {statusMap[item.status]} </p>
-                    <p><b>Create Time:</b> {item.createTime} </p>
+                    {/*<p><b>ID:</b> {item.id} </p>*/}
+                    {/*<p><b>Style:</b> {styleMap[item.style]} </p>*/}
+                    {/*<p><b>Prompt:</b> {item.prompt} </p>*/}
+                    {/*<p><b>Prompt English:</b> {item.promptEnglish} </p>*/}
+                    {/*<p><b>Generate Used Time:</b> {item.generateUsedTime / 1000}s </p>*/}
+                    {/*<p><b>Status:</b> {statusMap[item.status]} </p>*/}
+                    {/*<p><b>Create Time:</b> {new Date(item.createTime).toLocaleString()} </p>*/}
+                    <table className='table'>
+                        <tr>
+                            <th>ID</th>
+                            <td>{item.id}</td>
+                        </tr>
+                        <tr>
+                            <th>Style</th>
+                            <td>{styleMap[item.style]}</td>
+                        </tr>
+                        <tr>
+                            <th>Prompt</th>
+                            <td>{item.prompt}</td>
+                        </tr>
+                        <tr>
+                            <th>Prompt English</th>
+                            <td>{item.promptEnglish}</td>
+                        </tr>
+                        <tr>
+                            <th>Generate Used Time</th>
+                            <td>{item.generateUsedTime / 1000}s</td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td>{statusMap[item.status]}</td>
+                        </tr>
+                        <tr>
+                            <th>Create Time</th>
+                            <td>{new Date(item.createTime).toLocaleString()}</td>
+                        </tr>
+                    </table>
                 </List.Item>
             )
             }
         />
-    )
-        ;
+    );
 }
 
 
