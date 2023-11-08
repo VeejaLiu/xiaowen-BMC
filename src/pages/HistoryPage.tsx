@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {HistoryApi} from "../service/HistoryApi.ts";
 import {List, Image} from "antd";
 import "./HistoryPage.css";
+import TruncatedText from "./components/TruncatedText.tsx";
 
 
 export const styleMap: string[] = [
@@ -106,11 +107,15 @@ function HistoryPage() {
                         </tr>
                         <tr>
                             <th>Prompt</th>
-                            <td>{item.prompt}</td>
+                            <td>
+                                <TruncatedText text={item.prompt}/>
+                            </td>
                         </tr>
                         <tr>
                             <th>Prompt English</th>
-                            <td>{item.promptEnglish}</td>
+                            <td>
+                                <TruncatedText text={item.promptEnglish}/>
+                            </td>
                         </tr>
                         <tr>
                             <th>Generate Used Time</th>
