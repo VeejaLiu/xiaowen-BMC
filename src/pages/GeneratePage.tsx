@@ -6,23 +6,10 @@ import {
     Radio,
 } from 'antd';
 import {DrawApi} from "../service/DrawApi.ts";
+import {TATTOO_STYLES} from "../constant/style.ts";
 
 const {TextArea} = Input;
 
-export const styleMap: string[] = [
-    "None",
-    "Black work",
-    "Dot work",
-    "Geometric",
-    "Watercolor",
-    "Realism",
-    "Neo traditional",
-    "New school",
-    "Japanese",
-    "Tribal",
-    "Lettering",
-    "Trash polka",
-];
 
 const randomEmptyPromptMsg = [
     '写点什么吧',
@@ -50,7 +37,7 @@ const randomPrompt = [
 
 const GeneratePage: React.FC = () => {
     // 从styleMap随机选一个
-    const [style, setStyle] = useState<string>(Math.floor(Math.random() * styleMap.length).toString());
+    const [style, setStyle] = useState<string>(Math.floor(Math.random() * TATTOO_STYLES.length).toString());
     const [prompt, setPrompt] = useState<string>(randomPrompt[Math.floor(Math.random() * randomPrompt.length)]);
 
     const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
@@ -60,6 +47,7 @@ const GeneratePage: React.FC = () => {
 
 
     const handleStyleChange = (e: any) => {
+        console.log(`radio checked:${e.target.value}`)
         setStyle(e.target.value);
     }
 
@@ -90,14 +78,19 @@ const GeneratePage: React.FC = () => {
                 labelCol={{span: 4}}
                 wrapperCol={{span: 14}}
                 layout="horizontal"
-                style={{maxWidth: 600}}
+                style={{maxWidth:1200}}
             >
                 <Form.Item label="Style">
                     <Radio.Group onChange={handleStyleChange} value={style}>
-                        {styleMap.map((item, index) => {
-                                return <Radio.Button key={index} value={index.toString()}>{item}</Radio.Button>
-                            }
-                        )}
+                        {
+                            TATTOO_STYLES.map((item, index) => {
+                                    return (<Radio.Button key={index} value={index.toString()}>
+                                        <img src={item.icon} alt={item.name}/>
+                                        {item.name}
+                                    </Radio.Button>)
+                                }
+                            )
+                        }
                     </Radio.Group>
                 </Form.Item>
                 <Form.Item label="Prompt">
