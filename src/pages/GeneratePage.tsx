@@ -7,6 +7,7 @@ import {
 } from 'antd';
 import {DrawApi} from "../service/DrawApi.ts";
 import {TATTOO_STYLES} from "../constant/style.ts";
+import "./GeneratePage.css";
 
 const {TextArea} = Input;
 
@@ -20,25 +21,10 @@ const randomEmptyPromptMsg = [
     '你搁这点nm呢'
 ]
 
-const randomPrompt = [
-    '一只可爱的小猫',
-    '一个宇航员漫步在太空站内',
-    '大海上的日出景色',
-    '一杯热蓝莓酒',
-    '城市的霓虹灯光',
-    '高山上的松树林',
-    '一对恋人手牵手漫步在沙滩上',
-    '古老城堡的庭院',
-    '美丽的夕阳照耀在湖泊上',
-    '一个快乐的生日派对',
-    '静谧的森林小径',
-]
-
-
 const GeneratePage: React.FC = () => {
     // 从styleMap随机选一个
     const [style, setStyle] = useState<string>(Math.floor(Math.random() * TATTOO_STYLES.length).toString());
-    const [prompt, setPrompt] = useState<string>(randomPrompt[Math.floor(Math.random() * randomPrompt.length)]);
+    const [prompt, setPrompt] = useState<string>('');
 
     const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
     const [buttonLoading, setButtonLoading] = useState<boolean>(false);
@@ -84,7 +70,7 @@ const GeneratePage: React.FC = () => {
                     <Radio.Group onChange={handleStyleChange} value={style}>
                         {
                             TATTOO_STYLES.map((item, index) => {
-                                    return (<Radio.Button key={index} value={index.toString()}>
+                                    return (<Radio.Button key={index} value={index.toString()} className={"radioButton"}>
                                         <img src={item.icon} alt={item.name}/>
                                         {item.name}
                                     </Radio.Button>)

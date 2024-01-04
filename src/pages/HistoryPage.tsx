@@ -1,29 +1,14 @@
 import {useEffect, useState} from "react";
 import {HistoryApi} from "../service/HistoryApi.ts";
-import {List, Image} from "antd";
+import { Image, Pagination, PaginationProps} from "antd";
 import "./HistoryPage.css";
 import TruncatedText from "./components/TruncatedText.tsx";
-
-
-export const styleMap: string[] = [
-    "None",
-    "Black work",
-    "Dot work",
-    "Geometric",
-    "Watercolor",
-    "Realism",
-    "Neo traditional",
-    "New school",
-    "Japanese",
-    "Tribal",
-    "Lettering",
-    "Trash polka",
-];
+import {TATTOO_STYLES} from "../constant/style.ts";
 
 const statusMap: string[] = [
-    "Processing",
-    "Success",
-    "Fail",
+    "生成中",
+    "完成",
+    "失败",
 ];
 
 function HistoryPage() {
@@ -45,95 +30,118 @@ function HistoryPage() {
     // 	"createTime": "2023-10-19T11:19:04.000Z"
     // },
     const [history, setHistory] = useState<any[]>([]);
+    const [total, setTotal] = useState<number>(0);
+    const [page, setPage] = useState<number>(1);
+    // const [pageSize, setPageSize] = useState<number>(2);
 
-    const getHistory = async () => {
-        const result = await HistoryApi.getHistory();
+
+    const getHistory = async (
+        {
+            page,
+            pageSize
+        }: {
+            page: number,
+            pageSize: number
+        }) => {
+        const result = await HistoryApi.getHistory({
+            page: page,
+            pageSize: pageSize
+        });
         console.log(result);
         setHistory(result.history);
+        setTotal(result.total);
     }
 
+    // const onShowSizeChange: PaginationProps['onShowSizeChange'] = (current, size) => {
+    //     console.log('Current: ', current, '; PageSize: ', size);
+    //     setPageSize(size);
+    //     setPage(current);
+    // }
+
+    const onChange: PaginationProps['onChange'] = (page) => {
+        console.log('Page: ', page);
+        setPage(page);
+    };
+
     useEffect(() => {
-        getHistory();
-        console.log("HistoryPage");
-    }, []);
+        getHistory({page, pageSize: 2});
+    }, [page]);
 
     return (
-        <List
-            itemLayout="vertical"
-            size="large"
-            pagination={{
-                onChange: (page) => {
-                    console.log(page);
-                },
-                pageSize: 2,
-            }}
-            dataSource={history}
-            renderItem={(item) => (
-                <List.Item
-                    key={item.id}
-                    actions={[]}
-                    extra={
-                        <>
+        <>
+            <Pagination
+                className={"pagination"}
+                total={total}
+                current={page}
+                defaultCurrent={1}
+                pageSize={2}
+                onChange={onChange}
+                showSizeChanger={false}
+                // onShowSizeChange={onShowSizeChange}
+            />
+
+            {
+                history.map((item) => {
+                    return (
+                        <div className={"historyShow"}>
+                            <table className='table'>
+                                <tr>
+                                    <th>ID</th>
+                                    <td>{item.id}</td>
+                                </tr>
+                                <tr>
+                                    <th>风格</th>
+                                    <td>
+                                        <b>
+                                            {TATTOO_STYLES[item.style - 1].name}
+                                        </b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>描述</th>
+                                    <td>
+                                        <TruncatedText text={item.prompt}/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>译文</th>
+                                    <td>
+                                        <TruncatedText text={item.promptEnglish}/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>用时</th>
+                                    <td>{item.generateUsedTime / 1000}s</td>
+                                </tr>
+                                <tr>
+                                    <th>状态</th>
+                                    <td>{statusMap[item.status]}</td>
+                                </tr>
+                                <tr>
+                                    <th>建于</th>
+                                    <td>{new Date(item.createTime).toLocaleString()}</td>
+                                </tr>
+                            </table>
                             <Image.PreviewGroup>
                                 {
                                     item?.images?.map((image: string) => {
-                                        return (
-                                            <Image
-                                                width={200}
-                                                src={image}
-                                            />
-                                        );
+                                        return (<Image width={200} src={image}/>);
                                     })
                                 }
                             </Image.PreviewGroup>
-                        </>
-                    }
-                >
-                    {/*<p><b>ID:</b> {item.id} </p>*/}
-                    {/*<p><b>Style:</b> {styleMap[item.style]} </p>*/}
-                    {/*<p><b>Prompt:</b> {item.prompt} </p>*/}
-                    {/*<p><b>Prompt English:</b> {item.promptEnglish} </p>*/}
-                    {/*<p><b>Generate Used Time:</b> {item.generateUsedTime / 1000}s </p>*/}
-                    {/*<p><b>Status:</b> {statusMap[item.status]} </p>*/}
-                    {/*<p><b>Create Time:</b> {new Date(item.createTime).toLocaleString()} </p>*/}
-                    <table className='table'>
-                        <tr>
-                            <th>ID</th>
-                            <td>{item.id}</td>
-                        </tr>
-                        <tr>
-                            <th>Style</th>
-                            <td>{styleMap[item.style]}</td>
-                        </tr>
-                        <tr>
-                            <th>Prompt</th>
-                            <td>
-                                <TruncatedText text={item.prompt}/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Prompt English</th>
-                            <td>
-                                <TruncatedText text={item.promptEnglish}/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Generate Used Time</th>
-                            <td>{item.generateUsedTime / 1000}s</td>
-                        </tr>
-                        <tr>
-                            <th>Status</th>
-                            <td>{statusMap[item.status]}</td>
-                        </tr>
-                        <tr>
-                            <th>Create Time</th>
-                            <td>{new Date(item.createTime).toLocaleString()}</td>
-                        </tr>
-                    </table>
-                </List.Item>
-            )
+                            {
+                                item.status === 2 ? (
+                                    <div className={"success"}>
+                                        Failed
+                                    </div>
+                                ) : null
+                            }
+                        </div>
+                    );
+                })
             }
-        />
+
+        </>
     );
 }
 

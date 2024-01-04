@@ -2,7 +2,7 @@ import {useState} from 'react';
 import './TruncatedText.css'; // 导入样式文件
 
 
-const maxTextLength = 50;
+const maxTextLength = 20;
 
 const TruncatedText = ({text}: { text: string }) => {
     const [expanded, setExpanded] = useState(false);
