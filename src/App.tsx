@@ -3,6 +3,7 @@ import {useState} from "react";
 import GeneratePage from "./pages/GeneratePage.tsx";
 import HistoryPage from "./pages/HistoryPage.tsx";
 import NavBar from "./pages/NavBar.tsx";
+import DrawPage from "./pages/DrawPage.tsx";
 
 
 function App() {
