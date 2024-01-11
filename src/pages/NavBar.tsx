@@ -23,6 +23,14 @@ function NavBar({setCurrentPage}: { setCurrentPage: any }) {
             onClick: () => {
                 setCurrentPage('history');
             },
+        },
+        {
+            label: 'Draw',
+            key: 'draw',
+            icon: <CommentOutlined/>,
+            onClick: () => {
+                setCurrentPage('draw');
+            },
         }
     ];
 
