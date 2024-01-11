@@ -15,6 +15,8 @@ function App() {
                 return <GeneratePage/>;
             case 'history':
                 return <HistoryPage/>;
+            case 'draw':
+                return <DrawPage/>;
             // 添加更多页面组件
             default:
                 return <GeneratePage/>;
