@@ -12,11 +12,11 @@ const DrawPage: React.FC = () => {
         if (drawingCanvasRef.current) {
             const cursorCanvas = document.createElement('canvas');
             const ctx = cursorCanvas.getContext('2d');
-            cursorCanvas.width = lineWidth + 4;
-            cursorCanvas.height = lineWidth + 4;
+            cursorCanvas.width = +lineWidth;
+            cursorCanvas.height = +lineWidth;
 
             ctx!.beginPath();
-            ctx!.arc(lineWidth / 2 + 2, lineWidth / 2 + 2, lineWidth / 2, 0, 2 * Math.PI);
+            ctx!.arc(lineWidth / 2, lineWidth / 2, lineWidth / 2, 0, 2 * Math.PI);
             ctx!.fillStyle = 'black';
             ctx!.fill();
             ctx!.closePath();
@@ -67,7 +67,7 @@ const DrawPage: React.FC = () => {
 
 
     const startDrawing = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
-        const { offsetX, offsetY } = e.nativeEvent;
+        const {offsetX, offsetY} = e.nativeEvent;
         const ctx = drawingCanvasRef.current?.getContext('2d');
         if (!ctx) return;
 
@@ -98,13 +98,15 @@ const DrawPage: React.FC = () => {
         if (!isDrawing || !drawingCanvasRef.current) return;
         const mousePos = getMousePos(drawingCanvasRef.current, e.nativeEvent);
         const ctx = drawingCanvasRef.current?.getContext('2d');
+        if (!ctx) return;
+
         ctx!.lineWidth = lineWidth; // 使用 lineWidth 状态
         ctx!.lineJoin = 'round';
         ctx!.lineCap = 'round';
         ctx!.imageSmoothingEnabled = true;
 
         // 设置画笔颜色为黑色半透明
-        ctx!.strokeStyle = 'rgba(0, 0, 255, 0.1)';
+        ctx!.strokeStyle = 'rgba(0, 0, 0, 1)';
 
         ctx!.lineTo(mousePos.x, mousePos.y);
         ctx?.stroke();
@@ -149,6 +151,7 @@ const DrawPage: React.FC = () => {
                     value={lineWidth}
                     onChange={(e) => setLineWidth(parseInt(e.target.value))}
                 />
+                {lineWidth}px
             </div>
             <div id="canvas-container">
                 <canvas id="image-canvas" ref={imageCanvasRef}/>
